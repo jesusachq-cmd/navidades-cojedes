@@ -1,0 +1,1092 @@
+```html
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ministerio Público Estado Cojedes - Navidad</title>
+
+    <!-- Tailwind CSS CDN para estilos utilitarios y diseño responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN para iconos institucionales y festivos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts: Cinzel, Montserrat y Great Vibes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Montserrat:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- Configuración de paleta azul real/marino y plateado/dorado -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        royal: {
+                            800: '#0b1d52',
+                            900: '#071236',
+                            DEFAULT: '#1034a6',
+                            light: '#1e40af',
+                            bright: '#2563eb'
+                        },
+                        silver: {
+                            light: '#f1f5f9',
+                            DEFAULT: '#cbd5e1',
+                            dark: '#94a3b8',
+                            metallic: '#e2e8f0'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                        script: ['Great Vibes', 'cursive']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #071236;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Gradiente principal azul marino y azul real */
+        .bg-royal-gradient {
+            background: linear-gradient(135deg, #071236 0%, #1034a6 50%, #0b1d52 100%);
+        }
+
+        /* Brillo plateado animado para titulares y lema */
+        .text-silver-shimmer {
+            background: linear-gradient(90deg, #94a3b8 0%, #ffffff 50%, #94a3b8 100%);
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-wish {
+            animation: fadeInUp 0.35s ease-out forwards;
+        }
+
+        .border-silver-glow {
+            border: 1px solid rgba(226, 232, 240, 0.3);
+            box-shadow: 0 0 20px rgba(226, 232, 240, 0.12);
+        }
+
+        .glass-card {
+            background: rgba(16, 52, 166, 0.22);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Rotación inicial de -90deg para que los anillos SVG inicien desde arriba */
+        .ring-circle {
+            transition: stroke-dashoffset 0.35s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        /* Barra de desplazamiento personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #071236;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e40af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
+        }
+
+        /* Canvas flotante sin interceptar clics ni scroll */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-silver-metallic selection:text-royal-900">
+
+    <!-- Notificación Toast -->
+    <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 bg-royal-light text-white px-5 py-3.5 rounded-xl shadow-2xl border border-silver-metallic/40 flex items-center gap-3 max-w-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+        <span id="toast-message" class="text-xs sm:text-sm font-semibold leading-snug">Mensaje de notificación</span>
+    </div>
+
+    <!-- Canvas de Logotipos Flotantes del Ministerio Público -->
+    <canvas id="snow-canvas"></canvas>
+
+    <!-- ENCABEZADO SUPERIOR -->
+    <header class="sticky top-0 z-40 bg-royal-900/90 backdrop-blur-md border-b border-silver-dark/30 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            <a href="#" class="flex items-center space-x-3 sm:space-x-4 group">
+                <!-- Escudo Oficial Vectorial SVG del Ministerio Público -->
+                <div class="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 300 300" class="w-full h-full drop-shadow-[0_0_8px_rgba(255,255,255,0.4)] transition-transform duration-300 group-hover:scale-105" aria-label="Escudo Ministerio Público">
+                        <ellipse cx="150" cy="150" rx="140" ry="105" fill="#0052a5" transform="rotate(-15 150 150)" />
+                        <ellipse cx="150" cy="150" rx="115" ry="82" fill="#ffffff" transform="rotate(-15 150 150)" />
+                        <ellipse cx="150" cy="150" rx="90" ry="60" fill="#0052a5" transform="rotate(-15 150 150)" />
+
+                        <text x="92" y="166" font-family="'Montserrat', sans-serif" font-weight="900" font-size="52" fill="#ffffff">M</text>
+                        <text x="168" y="166" font-family="'Montserrat', sans-serif" font-weight="900" font-size="52" fill="#ffffff">P</text>
+
+                        <!-- Espada central -->
+                        <polygon points="150,15 161,195 139,195" fill="#0d0d0d" />
+                        <polygon points="150,15 150,195 139,195" fill="#e2e8f0" />
+                        <polygon points="150,15 161,195 150,195" fill="#64748b" />
+
+                        <path d="M 120 195 L 180 195 L 182 208 L 118 208 Z" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5" />
+                        <rect x="142" y="208" width="16" height="38" rx="2" fill="#0d0d0d" />
+                        <line x1="142" y1="216" x2="158" y2="216" stroke="#94a3b8" stroke-width="2" />
+                        <line x1="142" y1="224" x2="158" y2="224" stroke="#94a3b8" stroke-width="2" />
+                        <line x1="142" y1="232" x2="158" y2="232" stroke="#94a3b8" stroke-width="2" />
+                        <line x1="142" y1="240" x2="158" y2="240" stroke="#94a3b8" stroke-width="2" />
+                        <circle cx="150" cy="252" r="11" fill="#0d0d0d" stroke="#cbd5e1" stroke-width="2" />
+
+                        <text x="150" y="285" font-family="'Montserrat', sans-serif" font-weight="900" font-size="18" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">MINISTERIO PÚBLICO</text>
+                    </svg>
+                </div>
+
+                <div>
+                    <span class="block text-xs sm:text-base md:text-lg font-bold font-cinzel text-white tracking-wide leading-tight">MINISTERIO PÚBLICO ESTADO COJEDES</span>
+                    <p class="font-script text-silver-shimmer text-sm sm:text-lg">En esta navidad la confianza vuelve a casa</p>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-silver-metallic">
+                <a href="#cuenta-regresiva" class="hover:text-amber-300 transition">Cuenta Regresiva</a>
+                <a href="#historia" class="hover:text-amber-300 transition">Reseña</a>
+                <a href="#video-institucional" class="hover:text-amber-300 transition">Video</a>
+                <a href="#mensajes" class="hover:text-amber-300 transition">Mensajes</a>
+            </nav>
+
+            <button type="button" onclick="sharePage()" class="px-3 py-2 sm:px-4 sm:py-2 bg-royal-light hover:bg-royal-bright border border-silver-metallic/40 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 shadow-lg shrink-0">
+                <i class="fa-solid fa-share-nodes"></i> <span class="hidden sm:inline">Compartir</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- SECCIÓN HERO CON FONDO SVG DE LA SAGRADA FAMILIA Y ESTRELLA DE BELÉN -->
+        <section class="relative py-16 sm:py-28 px-4 overflow-hidden bg-royal-gradient border-b border-silver-dark/20 flex items-center justify-center min-h-[55vh]">
+            <div class="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center p-4">
+                <svg class="w-full h-full max-w-2xl object-contain drop-shadow-[0_0_25px_rgba(251,191,36,0.3)]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="250" cy="250" r="230" stroke="#cbd5e1" stroke-width="12" />
+                    <circle cx="250" cy="95" r="45" stroke="#fbbf24" stroke-width="8" />
+                    <line x1="250" y1="140" x2="250" y2="480" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="205" y1="95" x2="20" y2="95" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="295" y1="95" x2="480" y2="95" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="218" y1="127" x2="35" y2="235" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="282" y1="127" x2="465" y2="235" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="218" y1="63" x2="60" y2="20" stroke="#cbd5e1" stroke-width="6" />
+                    <line x1="282" y1="63" x2="440" y2="20" stroke="#cbd5e1" stroke-width="6" />
+                    <path d="M 250 55 Q 250 95 290 95 Q 250 95 250 135 Q 250 95 210 95 Q 250 95 250 55 Z" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
+                    <path d="M 190 170 C 130 200 90 280 90 350 C 90 420 170 470 250 470 C 210 470 145 430 145 350 C 145 280 185 220 230 180 Z" fill="#cbd5e1" />
+                    <path d="M 225 210 C 205 200 185 220 185 245 C 205 245 225 230 225 210 Z" fill="#071236" />
+                    <path d="M 250 155 C 340 155 430 230 430 330 C 430 420 350 475 250 475 C 380 475 390 330 310 230 C 270 270 220 300 220 375 C 220 440 280 460 310 460 C 240 460 185 410 185 365 C 185 310 230 250 285 200 C 270 175 255 165 250 155 Z" fill="#fbbf24" />
+                    <path d="M 285 250 Q 255 260 265 290 Q 295 275 285 250 Z" fill="#071236" />
+                    <circle cx="210" cy="315" r="22" fill="#cbd5e1" />
+                    <path d="M 185 340 C 185 390 235 440 310 440 C 240 440 215 390 215 350 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="4" />
+                </svg>
+            </div>
+
+            <div class="max-w-5xl mx-auto text-center relative z-10">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/10 border border-silver-metallic/30 text-silver-metallic text-xs sm:text-sm font-medium tracking-widest uppercase backdrop-blur-sm">
+                    Celebración Institucional Navideña • Estado Cojedes
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl md:text-6xl font-black font-cinzel text-white leading-tight mb-4 sm:mb-6 drop-shadow-2xl">
+                    MINISTERIO PÚBLICO ESTADO COJEDES
+                </h1>
+
+                <p class="text-2xl sm:text-4xl md:text-5xl text-silver-shimmer font-script font-medium max-w-3xl mx-auto mb-8 sm:mb-10 drop-shadow">
+                    "En esta navidad la confianza vuelve a casa"
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#historia" class="px-6 py-3 bg-royal-light hover:bg-royal-bright border border-silver-metallic/40 rounded-xl font-semibold shadow-lg hover:shadow-royal-light/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Reseña Navideña
+                    </a>
+                    <a href="#video-institucional" class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-200 rounded-xl font-semibold backdrop-blur-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-play"></i> Video Navideño
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CUENTA REGRESIVA INTERACTIVA (ANILLOS SVG, HITOS Y CAMPANADAS) -->
+        <section id="cuenta-regresiva" class="py-12 px-4 max-w-6xl mx-auto relative z-10 -mt-10">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 border-silver-glow text-center relative overflow-hidden shadow-2xl">
+                <div class="hidden md:block absolute -top-6 -left-6 text-amber-300/20 text-9xl transform -rotate-12 pointer-events-none animate-pulse">
+                    <i class="fa-solid fa-snowflake"></i>
+                </div>
+                <div class="hidden md:block absolute -bottom-6 -right-6 text-royal-bright/20 text-9xl transform rotate-12 pointer-events-none">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+
+                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+                    <div class="text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-silver-metallic/30 text-amber-300 text-xs font-semibold uppercase tracking-widest mb-1">
+                            <i class="fa-solid fa-sparkles"></i> Temporizador Navideño 2.0
+                        </div>
+                        <h2 class="text-xl sm:text-3xl font-black font-cinzel text-white">Camino a las Festividades</h2>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button id="chime-btn" type="button" onclick="toggleChimes()" class="px-4 py-2 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-300 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center gap-2 shadow-md">
+                            <i id="chime-icon" class="fa-solid fa-bell"></i> <span id="chime-text">Campanadas: OFF</span>
+                        </button>
+
+                        <div class="bg-royal-900/90 p-1 rounded-xl border border-silver-metallic/30 flex text-xs">
+                            <button id="tab-rings" type="button" onclick="switchView('rings')" class="px-3 py-1.5 rounded-lg font-bold text-white bg-royal-light shadow transition">
+                                <i class="fa-solid fa-circle-notch"></i> Anillos
+                            </button>
+                            <button id="tab-timeline" type="button" onclick="switchView('timeline')" class="px-3 py-1.5 rounded-lg font-bold text-silver-dark hover:text-white transition">
+                                <i class="fa-solid fa-bars-progress"></i> Hitos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inline-block mb-6 px-4 py-2 rounded-2xl bg-gradient-to-r from-royal-900 via-royal-light/40 to-royal-900 border border-silver-metallic/30 text-silver-shimmer text-xs sm:text-sm font-semibold">
+                    <i class="fa-solid fa-candy-cane text-red-400 mr-2"></i> Estado Navideño: <span id="holiday-phase" class="text-white font-bold">Cargando fase...</span>
+                </div>
+
+                <!-- VISTA 1: ANILLOS CIRCULARES SVG -->
+                <div id="view-rings" class="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto my-4 relative z-10">
+                    <!-- Días -->
+                    <div class="flex flex-col items-center justify-center p-4 bg-royal-900/60 rounded-2xl border border-silver-metallic/20 shadow-lg group hover:border-amber-400/50 transition">
+                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="transparent" />
+                                <circle id="ring-days" class="ring-circle" cx="50" cy="50" r="42" stroke="url(#goldGradient)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" />
+                                <defs>
+                                    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fbbf24" />
+                                        <stop offset="100%" stop-color="#d97706" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute flex flex-col items-center">
+                                <span id="ring-days-val" class="text-2xl sm:text-4xl font-black font-cinzel text-white drop-shadow">00</span>
+                                <span class="text-[10px] sm:text-xs text-silver-dark uppercase tracking-widest font-bold">Días</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Horas -->
+                    <div class="flex flex-col items-center justify-center p-4 bg-royal-900/60 rounded-2xl border border-silver-metallic/20 shadow-lg group hover:border-silver-metallic transition">
+                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="transparent" />
+                                <circle id="ring-hours" class="ring-circle" cx="50" cy="50" r="42" stroke="url(#silverGradient)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" />
+                                <defs>
+                                    <linearGradient id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff" />
+                                        <stop offset="100%" stop-color="#94a3b8" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute flex flex-col items-center">
+                                <span id="ring-hours-val" class="text-2xl sm:text-4xl font-black font-cinzel text-white drop-shadow">00</span>
+                                <span class="text-[10px] sm:text-xs text-silver-dark uppercase tracking-widest font-bold">Horas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Minutos -->
+                    <div class="flex flex-col items-center justify-center p-4 bg-royal-900/60 rounded-2xl border border-silver-metallic/20 shadow-lg group hover:border-royal-bright transition">
+                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="transparent" />
+                                <circle id="ring-minutes" class="ring-circle" cx="50" cy="50" r="42" stroke="url(#blueGradient)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" />
+                                <defs>
+                                    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#60a5fa" />
+                                        <stop offset="100%" stop-color="#1d4ed8" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute flex flex-col items-center">
+                                <span id="ring-minutes-val" class="text-2xl sm:text-4xl font-black font-cinzel text-white drop-shadow">00</span>
+                                <span class="text-[10px] sm:text-xs text-silver-dark uppercase tracking-widest font-bold">Minutos</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segundos -->
+                    <div class="flex flex-col items-center justify-center p-4 bg-royal-900/60 rounded-2xl border border-silver-metallic/20 shadow-lg group hover:border-rose-400/50 transition">
+                        <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center">
+                            <svg class="w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8" fill="transparent" />
+                                <circle id="ring-seconds" class="ring-circle" cx="50" cy="50" r="42" stroke="url(#roseGradient)" stroke-width="8" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" />
+                                <defs>
+                                    <linearGradient id="roseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fb7185" />
+                                        <stop offset="100%" stop-color="#be123c" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute flex flex-col items-center">
+                                <span id="ring-seconds-val" class="text-2xl sm:text-4xl font-black font-cinzel text-white drop-shadow">00</span>
+                                <span class="text-[10px] sm:text-xs text-silver-dark uppercase tracking-widest font-bold">Segundos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VISTA 2: HITOS NAVIDEÑOS -->
+                <div id="view-timeline" class="hidden max-w-3xl mx-auto my-6 text-left space-y-4 relative z-10">
+                    <div class="bg-royal-900/70 p-4 rounded-2xl border border-silver-metallic/20 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+                            <i class="fa-solid fa-tree text-lg"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-white mb-1">
+                                <span>Encendido Institucional &amp; Jornada Solidaria</span>
+                                <span class="text-amber-300">15 de Diciembre</span>
+                            </div>
+                            <p class="text-xs text-silver-dark">Encuentro de convivencia, solidaridad comunitaria y fortalecimiento de los lazos familiares en Cojedes.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-royal-900/70 p-4 rounded-2xl border border-silver-metallic/20 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-center text-rose-300 shrink-0">
+                            <i class="fa-solid fa-star-of-life text-lg"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-white mb-1">
+                                <span>Nochebuena y Navidad</span>
+                                <span id="milestone-christmas-date" class="text-rose-300">25 de Diciembre</span>
+                            </div>
+                            <p class="text-xs text-silver-dark">Celebración de la paz, la unión familiar y el espíritu de esperanza en cada hogar cojedeño.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-royal-900/70 p-4 rounded-2xl border border-silver-metallic/20 flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-300 shrink-0">
+                            <i class="fa-solid fa-champagne-glasses text-lg"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-white mb-1">
+                                <span>Renovación de Compromiso por la Justicia</span>
+                                <span class="text-blue-300">01 de Enero</span>
+                            </div>
+                            <p class="text-xs text-silver-dark">Inicio del nuevo año reafirmando la vocación de servicio, ética y cercanía con la ciudadanía.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-silver-dark mt-4 relative z-10">
+                    Objetivo de cuenta regresiva: <span id="countdown-target-label" class="text-silver-metallic font-semibold">25 de Diciembre</span> • Puedes probar una campanada festiva en cualquier momento.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 1: RESEÑA NAVIDEÑA (#historia) -->
+        <section id="historia" class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Sentir Institucional</span>
+                <h2 class="text-2xl sm:text-4xl font-black font-cinzel text-white mt-1">Reseña Navideña</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-silver-metallic to-transparent mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 glass-card rounded-3xl p-6 sm:p-10 border-silver-glow space-y-5 shadow-xl">
+                    <h3 class="text-xl sm:text-2xl font-bold font-cinzel text-silver-shimmer">
+                        La Confianza que Ilumina el Hogar Cojedeño
+                    </h3>
+                    <p class="text-sm sm:text-base text-silver-light/90 leading-relaxed">
+                        En el <strong class="text-white">Ministerio Público del Estado Cojedes</strong>, la época decembrina representa mucho más que una tradición en el calendario: es un tiempo de reflexión, gratitud y renovación del compromiso ético con cada familia de nuestras tierras llaneras.
+                    </p>
+                    <p class="text-sm sm:text-base text-silver-light/90 leading-relaxed">
+                        Bajo el lema <em class="text-amber-200 font-semibold">"En esta navidad la confianza vuelve a casa"</em>, honramos la labor cotidiana de fiscales, servidores y servidoras que trabajan con rectitud, cercanía humana y respeto a los derechos fundamentales, llevando tranquilidad y esperanza a los hogares de San Carlos y todos los municipios.
+                    </p>
+                    <div class="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-royal-900/70 p-4 rounded-2xl border border-white/10 text-center">
+                            <i class="fa-solid fa-scale-balanced text-amber-300 text-xl mb-2"></i>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white">Ética y Justicia</div>
+                        </div>
+                        <div class="bg-royal-900/70 p-4 rounded-2xl border border-white/10 text-center">
+                            <i class="fa-solid fa-hands-holding-heart text-rose-300 text-xl mb-2"></i>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white">Vocación Humana</div>
+                        </div>
+                        <div class="bg-royal-900/70 p-4 rounded-2xl border border-white/10 text-center">
+                            <i class="fa-solid fa-house-chimney text-blue-300 text-xl mb-2"></i>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white">Unión Familiar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 glass-card rounded-3xl p-6 sm:p-8 border-silver-glow flex flex-col justify-between space-y-6 bg-gradient-to-br from-royal-light/25 to-royal-900/80">
+                    <div class="text-amber-300 text-3xl">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </div>
+                    <blockquote class="font-script text-3xl sm:text-4xl text-white leading-snug">
+                        Que la luz de Belén guíe nuestros pasos hacia la paz, la concordia y la esperanza compartida en cada rincón de Cojedes.
+                    </blockquote>
+                    <div class="border-t border-white/15 pt-4 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-bold font-cinzel text-white uppercase tracking-wider">Ministerio Público</p>
+                            <p class="text-xs text-silver-dark">Estado Cojedes • Venezuela</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-300/30 text-amber-200 text-xs font-semibold">
+                            Navidad
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: VIDEO NAVIDEÑO (#video-institucional) -->
+        <section id="video-institucional" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 border-silver-glow shadow-2xl">
+                <div class="text-center mb-8">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Mensaje Audiovisual</span>
+                    <h2 class="text-2xl sm:text-4xl font-black font-cinzel text-white mt-1">Video Navideño</h2>
+                    <p class="text-xs sm:text-sm text-silver-dark mt-2">
+                        Una salutación especial de fin de año para toda la gran familia del Ministerio Público en Cojedes.
+                    </p>
+                </div>
+
+                <!-- Reproductor embebido responsivo de YouTube (16:9) -->
+                <div class="relative rounded-2xl overflow-hidden border border-silver-metallic/30 bg-royal-900 aspect-video shadow-2xl">
+                    <iframe
+                        class="w-full h-full block"
+                        src="https://www.youtube.com/embed/CCWjeNEXxio"
+                        title="Video Navideño - Ministerio Público Estado Cojedes"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                        loading="lazy">
+                    </iframe>
+                </div>
+
+                <div class="mt-5 flex flex-wrap items-center justify-between gap-4 bg-royal-900/60 px-4 py-3 rounded-2xl border border-white/10 text-xs sm:text-sm">
+                    <a
+                        href="https://youtu.be/CCWjeNEXxio?si=sYOsNuBtBKvj_M-o"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="px-4 py-2 bg-royal-light hover:bg-royal-bright border border-silver-metallic/40 rounded-xl font-semibold text-white transition inline-flex items-center gap-2 shadow-md">
+                        <i class="fa-brands fa-youtube text-rose-400 text-base"></i>
+                        <span>Ver directamente en YouTube</span>
+                    </a>
+                    <span class="text-silver-metallic font-medium">
+                        <i class="fa-solid fa-location-dot text-amber-300 mr-1"></i> San Carlos, Estado Cojedes
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: MURO DE MENSAJES Y BUENOS DESEOS (#mensajes) -->
+        <section id="mensajes" class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-300">Comunidad y Solidaridad</span>
+                <h2 class="text-2xl sm:text-4xl font-black font-cinzel text-white mt-1">Muro de Buenos Deseos</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-silver-metallic to-transparent mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Formulario de deseos -->
+                <div class="lg:col-span-5 glass-card rounded-3xl p-6 sm:p-8 border-silver-glow h-fit">
+                    <h3 class="text-lg sm:text-xl font-bold font-cinzel text-white mb-2">Comparte tu Mensaje</h3>
+                    <p class="text-xs text-silver-dark mb-5">
+                        Deja un saludo navideño para tus compañeros, familiares y ciudadanos del estado Cojedes.
+                    </p>
+
+                    <form id="wish-form" class="space-y-4" novalidate>
+                        <div>
+                            <label for="wish-name" class="block text-xs font-semibold uppercase tracking-wider text-silver-metallic mb-1.5">Nombre o Dependencia</label>
+                            <input id="wish-name" type="text" maxlength="60" placeholder="Ej. Fiscalía Municipal San Carlos" class="w-full px-4 py-2.5 rounded-xl bg-royal-900/90 border border-silver-metallic/30 text-white placeholder-silver-dark/60 text-sm focus:outline-none focus:border-amber-300 transition">
+                        </div>
+
+                        <div>
+                            <label for="wish-message" class="block text-xs font-semibold uppercase tracking-wider text-silver-metallic mb-1.5">Mensaje Navideño</label>
+                            <textarea id="wish-message" rows="3" maxlength="220" placeholder="Escribe tus deseos de paz, unión y esperanza..." class="w-full px-4 py-2.5 rounded-xl bg-royal-900/90 border border-silver-metallic/30 text-white placeholder-silver-dark/60 text-sm focus:outline-none focus:border-amber-300 transition resize-none"></textarea>
+                            <div class="flex justify-between items-center mt-1 text-[11px] text-silver-dark">
+                                <span id="wish-error" class="text-rose-300 font-medium"></span>
+                                <span id="wish-counter">0 / 220</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 px-5 bg-royal-light hover:bg-royal-bright border border-silver-metallic/40 rounded-xl text-sm font-bold text-white shadow-lg transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Publicar Deseo
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Lista de mensajes -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div id="wishes-list" class="space-y-4">
+                        <!-- Mensajes renderizados dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="bg-royal-900 border-t border-silver-dark/30 py-8 px-4 text-center relative z-10">
+        <div class="max-w-5xl mx-auto space-y-2">
+            <p class="font-cinzel font-bold text-sm sm:text-base text-white tracking-wide">
+                MINISTERIO PÚBLICO • ESTADO COJEDES
+            </p>
+            <p class="font-script text-2xl text-silver-shimmer">
+                En esta navidad la confianza vuelve a casa
+            </p>
+            <p class="text-xs text-silver-dark pt-2">
+                &copy; <span id="current-year"></span> Ministerio Público Estado Cojedes. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /* =====================================================================
+           1. UTILIDADES DE INTERFAZ: NOTIFICACIONES TOAST Y COMPARTIR
+        ===================================================================== */
+        let toastTimeout = null;
+
+        /**
+         * Muestra una notificación temporal no intrusiva en pantalla.
+         * @param {string} message - Texto a mostrar.
+         * @param {string} [type='success'] - Tipo ('success' | 'info' | 'warning').
+         */
+        function showToast(message, type = 'success') {
+            try {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                const toastIcon = document.getElementById('toast-icon');
+                if (!toast || !toastMessage || !toastIcon) return;
+
+                toastMessage.textContent = message;
+
+                if (type === 'warning') {
+                    toastIcon.className = 'fa-solid fa-triangle-exclamation text-amber-300 text-lg shrink-0';
+                } else if (type === 'info') {
+                    toastIcon.className = 'fa-solid fa-circle-info text-sky-300 text-lg shrink-0';
+                } else {
+                    toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg shrink-0';
+                }
+
+                toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                toast.classList.add('translate-y-0', 'opacity-100');
+
+                if (toastTimeout) clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }, 3200);
+            } catch (err) {
+                console.error('Error al mostrar notificación:', err);
+            }
+        }
+
+        /**
+         * Copia el enlace actual al portapapeles o abre el menú nativo de compartir.
+         */
+        async function sharePage() {
+            const shareData = {
+                title: 'Ministerio Público Estado Cojedes - Navidad',
+                text: 'En esta navidad la confianza vuelve a casa — Ministerio Público Estado Cojedes.',
+                url: window.location.href
+            };
+
+            try {
+                if (navigator.share && window.isSecureContext) {
+                    await navigator.share(shareData);
+                    showToast('¡Enlace compartido con éxito!', 'success');
+                    return;
+                }
+            } catch (err) {
+                if (err && err.name === 'AbortError') return;
+            }
+
+            try {
+                const tempInput = document.createElement('input');
+                tempInput.value = window.location.href;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                tempInput.setSelectionRange(0, tempInput.value.length);
+                const copied = document.execCommand('copy');
+                document.body.removeChild(tempInput);
+
+                if (copied) {
+                    showToast('Enlace copiado al portapapeles.', 'success');
+                } else {
+                    showToast('Copia la URL desde la barra de direcciones.', 'info');
+                }
+            } catch (err) {
+                showToast('No se pudo copiar automáticamente el enlace.', 'warning');
+            }
+        }
+
+        /* =====================================================================
+           2. SÍNTESIS DE CAMPANADAS CON WEB AUDIO API
+        ===================================================================== */
+        let chimesEnabled = false;
+        let audioCtx = null;
+        let lastChimeHourKey = null;
+
+        /**
+         * Obtiene o inicializa el contexto de audio del navegador de forma segura.
+         */
+        function getAudioContext() {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) return null;
+            if (!audioCtx) {
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
+            return audioCtx;
+        }
+
+        /**
+         * Reproduce una campanada armónica navideña usando osciladores y envolvente.
+         */
+        function playHolidayChime() {
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) {
+                    showToast('El audio no está disponible en este navegador.', 'warning');
+                    return;
+                }
+
+                const now = ctx.currentTime;
+                const partials = [
+                    { freq: 523.25, gain: 0.16, decay: 1.8 },
+                    { freq: 1046.50, gain: 0.07, decay: 1.2 },
+                    { freq: 1567.98, gain: 0.03, decay: 0.7 }
+                ];
+
+                partials.forEach((p) => {
+                    const osc = ctx.createOscillator();
+                    const gainNode = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(p.freq, now);
+
+                    gainNode.gain.setValueAtTime(0.0001, now);
+                    gainNode.gain.exponentialRampToValueAtTime(p.gain, now + 0.02);
+                    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + p.decay);
+
+                    osc.connect(gainNode);
+                    gainNode.connect(ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + p.decay + 0.05);
+                });
+            } catch (err) {
+                console.error('Error al reproducir campanada:', err);
+            }
+        }
+
+        /**
+         * Alterna el estado de las campanadas automáticas y reproduce una muestra al activar.
+         */
+        function toggleChimes() {
+            chimesEnabled = !chimesEnabled;
+            const chimeText = document.getElementById('chime-text');
+            const chimeIcon = document.getElementById('chime-icon');
+            const chimeBtn = document.getElementById('chime-btn');
+
+            if (chimesEnabled) {
+                if (chimeText) chimeText.textContent = 'Campanadas: ON';
+                if (chimeIcon) chimeIcon.className = 'fa-solid fa-bell-concierge animate-bounce';
+                if (chimeBtn) {
+                    chimeBtn.classList.remove('bg-amber-500/20', 'border-amber-400/40', 'text-amber-300');
+                    chimeBtn.classList.add('bg-amber-400', 'border-amber-200', 'text-royal-900');
+                }
+                playHolidayChime();
+                showToast('Campanadas navideñas activadas.', 'success');
+            } else {
+                if (chimeText) chimeText.textContent = 'Campanadas: OFF';
+                if (chimeIcon) chimeIcon.className = 'fa-solid fa-bell';
+                if (chimeBtn) {
+                    chimeBtn.classList.remove('bg-amber-400', 'border-amber-200', 'text-royal-900');
+                    chimeBtn.classList.add('bg-amber-500/20', 'border-amber-400/40', 'text-amber-300');
+                }
+                showToast('Campanadas navideñas desactivadas.', 'info');
+            }
+        }
+
+        /* =====================================================================
+           3. CUENTA REGRESIVA CON ANILLOS SVG Y ALTERNANCIA DE VISTAS
+        ===================================================================== */
+        const RING_CIRCUMFERENCE = 2 * Math.PI * 42; // ~263.89
+
+        /**
+         * Cambia entre la vista de Anillos SVG y la vista de Hitos Navideños.
+         * @param {'rings'|'timeline'} mode
+         */
+        function switchView(mode) {
+            const ringsView = document.getElementById('view-rings');
+            const timelineView = document.getElementById('view-timeline');
+            const tabRings = document.getElementById('tab-rings');
+            const tabTimeline = document.getElementById('tab-timeline');
+
+            if (!ringsView || !timelineView || !tabRings || !tabTimeline) return;
+
+            if (mode === 'timeline') {
+                ringsView.classList.add('hidden');
+                timelineView.classList.remove('hidden');
+
+                tabTimeline.classList.add('text-white', 'bg-royal-light', 'shadow');
+                tabTimeline.classList.remove('text-silver-dark');
+
+                tabRings.classList.remove('text-white', 'bg-royal-light', 'shadow');
+                tabRings.classList.add('text-silver-dark');
+            } else {
+                timelineView.classList.add('hidden');
+                ringsView.classList.remove('hidden');
+
+                tabRings.classList.add('text-white', 'bg-royal-light', 'shadow');
+                tabRings.classList.remove('text-silver-dark');
+
+                tabTimeline.classList.remove('text-white', 'bg-royal-light', 'shadow');
+                tabTimeline.classList.add('text-silver-dark');
+            }
+        }
+
+        /**
+         * Actualiza el progreso visual de un anillo SVG dado su valor y máximo.
+         */
+        function setRingProgress(circleId, value, max) {
+            const circle = document.getElementById(circleId);
+            if (!circle) return;
+            const ratio = Math.max(0, Math.min(1, value / max));
+            const offset = RING_CIRCUMFERENCE * (1 - ratio);
+            circle.setAttribute('stroke-dashoffset', offset.toFixed(2));
+        }
+
+        /**
+         * Calcula la próxima fecha de Navidad (25 de diciembre) y actualiza contadores y fases.
+         */
+        function updateCountdown() {
+            try {
+                const now = new Date();
+                const year = now.getFullYear();
+                let target = new Date(year, 11, 25, 0, 0, 0);
+
+                // Si ya pasó la Navidad de este año, apuntar al 25 de diciembre del próximo año
+                if (now.getTime() > target.getTime()) {
+                    target = new Date(year + 1, 11, 25, 0, 0, 0);
+                }
+
+                const diffMs = Math.max(0, target.getTime() - now.getTime());
+                const totalSeconds = Math.floor(diffMs / 1000);
+
+                const days = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+
+                const pad = (n) => String(n).padStart(2, '0');
+
+                const daysVal = document.getElementById('ring-days-val');
+                const hoursVal = document.getElementById('ring-hours-val');
+                const minutesVal = document.getElementById('ring-minutes-val');
+                const secondsVal = document.getElementById('ring-seconds-val');
+
+                if (daysVal) daysVal.textContent = pad(days);
+                if (hoursVal) hoursVal.textContent = pad(hours);
+                if (minutesVal) minutesVal.textContent = pad(minutes);
+                if (secondsVal) secondsVal.textContent = pad(seconds);
+
+                setRingProgress('ring-days', days, 365);
+                setRingProgress('ring-hours', hours, 24);
+                setRingProgress('ring-minutes', minutes, 60);
+                setRingProgress('ring-seconds', seconds, 60);
+
+                const phaseEl = document.getElementById('holiday-phase');
+                const labelEl = document.getElementById('countdown-target-label');
+                const milestoneChristmasEl = document.getElementById('milestone-christmas-date');
+
+                if (labelEl) {
+                    labelEl.textContent = `25 de Diciembre de ${target.getFullYear()}`;
+                }
+                if (milestoneChristmasEl) {
+                    milestoneChristmasEl.textContent = `25 de Diciembre (${target.getFullYear()})`;
+                }
+
+                if (phaseEl) {
+                    const month = now.getMonth();
+                    const day = now.getDate();
+
+                    if (month === 11 && day === 25) {
+                        phaseEl.textContent = '¡Feliz Navidad! La confianza vuelve a casa';
+                    } else if (month === 11 && day >= 16) {
+                        phaseEl.textContent = 'Semanas de Luz, Unión y Espíritu Navideño';
+                    } else if (month === 11) {
+                        phaseEl.textContent = 'Diciembre Festivo • Preparando la Celebración';
+                    } else if (month === 10) {
+                        phaseEl.textContent = 'Antesala Navideña • Encendiendo la Esperanza';
+                    } else {
+                        phaseEl.textContent = 'Camino a la Navidad • Sembrando Confianza';
+                    }
+                }
+
+                // Campanada automática cada hora en punto cuando está activada
+                const hourKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}`;
+                if (chimesEnabled && now.getMinutes() === 0 && now.getSeconds() === 0 && lastChimeHourKey !== hourKey) {
+                    lastChimeHourKey = hourKey;
+                    playHolidayChime();
+                }
+            } catch (err) {
+                console.error('Error al actualizar cuenta regresiva:', err);
+            }
+        }
+
+        /* =====================================================================
+           4. MURO DE MENSAJES Y BUENOS DESEOS (PERSISTENCIA LOCAL)
+        ===================================================================== */
+        const WISHES_STORAGE_KEY = 'mp_cojedes_navidad_wishes_v1';
+        const DEFAULT_WISHES = [
+            {
+                id: 'seed-1',
+                author: 'Equipo Fiscal • San Carlos',
+                message: 'Que esta Navidad traiga paz, salud y unión familiar a cada hogar de Cojedes. ¡La confianza vuelve a casa!',
+                date: 'Diciembre • Estado Cojedes'
+            },
+            {
+                id: 'seed-2',
+                author: 'Servidores y Servidoras MP',
+                message: 'Renovamos nuestro compromiso con la justicia, la ética y el respeto humano para recibir el nuevo año con esperanza.',
+                date: 'Diciembre • Estado Cojedes'
+            }
+        ];
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function loadWishes() {
+            try {
+                const raw = localStorage.getItem(WISHES_STORAGE_KEY);
+                if (!raw) return [...DEFAULT_WISHES];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) && parsed.length > 0 ? parsed : [...DEFAULT_WISHES];
+            } catch (err) {
+                return [...DEFAULT_WISHES];
+            }
+        }
+
+        function saveWishes(wishes) {
+            try {
+                localStorage.setItem(WISHES_STORAGE_KEY, JSON.stringify(wishes.slice(0, 25)));
+            } catch (err) {
+                console.warn('No se pudo guardar en localStorage:', err);
+            }
+        }
+
+        function renderWishes() {
+            const list = document.getElementById('wishes-list');
+            if (!list) return;
+            const wishes = loadWishes();
+            list.innerHTML = '';
+
+            wishes.forEach((wish) => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-2xl p-5 border-silver-glow animate-wish space-y-2.5';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-sm font-bold font-cinzel text-amber-300 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-xs"></i> ${escapeHtml(wish.author)}
+                        </span>
+                        <span class="text-[11px] text-silver-dark">${escapeHtml(wish.date || 'Navidad')}</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-silver-light/95 leading-relaxed">
+                        "${escapeHtml(wish.message)}"
+                    </p>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function initWishForm() {
+            const form = document.getElementById('wish-form');
+            const nameInput = document.getElementById('wish-name');
+            const msgInput = document.getElementById('wish-message');
+            const counter = document.getElementById('wish-counter');
+            const errorEl = document.getElementById('wish-error');
+
+            if (!form || !nameInput || !msgInput) return;
+
+            msgInput.addEventListener('input', () => {
+                if (counter) {
+                    counter.textContent = `${msgInput.value.length} / 220`;
+                }
+                if (errorEl) {
+                    errorEl.textContent = '';
+                }
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const author = nameInput.value.trim() || 'Familia del Ministerio Público';
+                const message = msgInput.value.trim();
+
+                if (!message) {
+                    if (errorEl) errorEl.textContent = 'Por favor escribe un mensaje navideño.';
+                    msgInput.focus();
+                    return;
+                }
+
+                const wishes = loadWishes();
+                wishes.unshift({
+                    id: `wish-${Date.now()}`,
+                    author,
+                    message,
+                    date: 'Recién publicado'
+                });
+                saveWishes(wishes);
+                renderWishes();
+
+                nameInput.value = '';
+                msgInput.value = '';
+                if (counter) counter.textContent = '0 / 220';
+                if (errorEl) errorEl.textContent = '';
+
+                showToast('¡Tu buen deseo navideño ha sido publicado!', 'success');
+            });
+        }
+
+        /* =====================================================================
+           5. CANVAS FLOTANTE DE EMBLEMAS MP (SIN BLOQUEAR CLICS NI SCROLL)
+        ===================================================================== */
+        const floatingBadges = [];
+
+        function initFloatingBadges() {
+            const canvas = document.getElementById('snow-canvas');
+            if (!canvas) return;
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const count = width < 640 ? 10 : 18;
+
+            floatingBadges.length = 0;
+            for (let i = 0; i < count; i++) {
+                floatingBadges.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: 18 + Math.random() * 16,
+                    speedY: 0.35 + Math.random() * 0.55,
+                    drift: (Math.random() - 0.5) * 0.5,
+                    phase: Math.random() * Math.PI * 2,
+                    alpha: 0.08 + Math.random() * 0.12
+                });
+            }
+        }
+
+        function animateFloatingBadges(timeMs) {
+            const canvas = document.getElementById('snow-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+            if (canvas.width !== Math.floor(width * dpr) || canvas.height !== Math.floor(height * dpr)) {
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+            }
+
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, width, height);
+
+            const t = timeMs * 0.001;
+
+            floatingBadges.forEach((b) => {
+                b.y += b.speedY;
+                b.x += Math.sin(t + b.phase) * 0.35 + b.drift * 0.25;
+
+                if (b.y > height + 40) {
+                    b.y = -40;
+                    b.x = Math.random() * width;
+                }
+                if (b.x < -40) b.x = width + 40;
+                if (b.x > width + 40) b.x = -40;
+
+                ctx.save();
+                ctx.translate(b.x, b.y);
+                ctx.rotate(Math.sin(t * 0.7 + b.phase) * 0.25);
+                ctx.globalAlpha = b.alpha;
+
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, b.size * 0.75, b.size * 0.45, -0.25, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = `700 ${Math.max(9, Math.floor(b.size * 0.38))}px Montserrat, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('MP', 0, 0.5);
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animateFloatingBadges);
+        }
+
+        /* =====================================================================
+           6. INICIALIZACIÓN GENERAL
+        ===================================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            const yearEl = document.getElementById('current-year');
+            if (yearEl) {
+                yearEl.textContent = String(new Date().getFullYear());
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            renderWishes();
+            initWishForm();
+
+            initFloatingBadges();
+            requestAnimationFrame(animateFloatingBadges);
+        });
+
+        window.addEventListener('resize', () => {
+            initFloatingBadges();
+        });
+    </script>
+</body>
+</html>
+```
